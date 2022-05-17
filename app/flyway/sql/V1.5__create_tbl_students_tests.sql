@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS tbl_students_tests (
+    ID SERIAL PRIMARY KEY,
+    studentID VARCHAR (36) NOT NULL,
+    testID INT NOT NULL,
+    year INT NOT NULL,
+    FOREIGN KEY (studentID) REFERENCES tbl_students (outID) ON UPDATE CASCADE,
+    FOREIGN KEY (testID) REFERENCES tbl_test (testID) ON UPDATE CASCADE
+);
