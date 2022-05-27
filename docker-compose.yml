@@ -9,13 +9,13 @@ services:
     links:
       - "db:db" 
     # volumes:
-      # - C:\Users\Admin\Desktop\Python\DB labs\lab1\app:/app
+      # - C:\Users\Admin\Desktop\to git\lab1\app:/app
   
   flyway:
     image: flyway/flyway
     command: -url=jdbc:postgresql://db:5432/znodata -schemas=public -user=postgres -password=password -connectRetries=60 migrate
     volumes:
-      - /app/flyway/sql:/flyway/sql
+      - ./app/flyway/sql:/flyway/sql
     depends_on:
       - db
   
