@@ -19,7 +19,6 @@ ZNO2020 = 'Odata2020File.csv'
 
 TABLES = ['tbl_regions', 'tbl_educationOrganizations', 'tbl_test', 'tbl_students', 'tbl_students_tests']
 
-
 query = '''
 SELECT data2019.EORegName, data2019.max2019, data2020.max2020
 FROM
@@ -77,14 +76,18 @@ while tries:
 
                 # tbl_regions
                 regName = headers.index('REGNAME')
-                areaName = headers.index('AREANAME')
+                terName = headers.index('TERNAME')
                 terTypeName = headers.index('TerTypeName')
 
                 # tbl_educationOrganizations
                 EOName = headers.index('EONAME')
                 EOTypeName = headers.index('EOTYPENAME')
                 EORegName = headers.index('EORegName')
-                EOAreaName = headers.index('EOAreaName')
+                EOTerName = headers.index('EOTerName')
+
+                engPTName = headers.index('engPTName')
+                engPTRegName = headers.index('engPTRegName')
+                engPTTerName = headers.index('engPTTerName')
 
                 # tbl_students
                 outID = headers.index('OUTID')
@@ -94,37 +97,41 @@ while tries:
                 # tbl_students_tests
                 year = 2019
 
+                cur.execute(insert('tbl_regions',
+                                        ('regName',    'terName',    'terTypeName'), 3),
+                                        ('null', 'null', 'null'))
 
-                while count != 0:
-                    row = next(reader)
-                    if row[testName] == 'Англійська мова':
-                        count -= 1
+                for _ in range(count):
+                    next(reader)
                 
                 for idx, row in enumerate(reader):
-                    if row[testName] == 'Англійська мова':
-                        cur.execute(insert('tbl_regions',
-                                          ('regName',    'areaName',    'terTypeName'), 3),
-                                          (row[regName], row[areaName], row[terTypeName]))
-                        
-                        cur.execute(insert('tbl_educationOrganizations',
-                                          ('EOName',    'EOTypeName',    'EORegName',    'EOAreaName'), 4),
-                                          (row[EOName], row[EOTypeName], row[EORegName], row[EOAreaName]))
-                        
-                        cur.execute(insert('tbl_test',
-                                          ('testName',    'testMark100',               'testMark12',               'testStatus',    'EOName'), 5),
-                                          (row[testName], validMark(row[testMark100]), validMark(row[testMark12]), row[testStatus], row[EONameTest]))
-                        
-                        cur.execute(insert('tbl_students',
-                                          ('outID',    'birth',    'sexTypeName',    'EOName'), 4),
-                                          (row[outID], row[birth], row[sexTypeName], row[EOName]))
-                        
-                        cur.execute('SELECT MAX(testID) FROM tbl_test')
-                        testID = cur.fetchone()[0]
-
-                        cur.execute(insert('tbl_students_tests',
-                                          ('studentID', 'testID', 'year'), 3),
-                                          (row[outID],  testID,    year))
+                    cur.execute(insert('tbl_regions',
+                                        ('regName',    'terName',    'terTypeName'), 3),
+                                        (row[regName], row[terName], row[terTypeName]))
                     
+                    cur.execute(insert('tbl_educationOrganizations',
+                                        ('EOName',    'EOTypeName',    'EORegName',    'EOTerName'), 4),
+                                        (row[EOName], row[EOTypeName], row[EORegName], row[EOTerName]))
+                    
+                    cur.execute(insert('tbl_educationOrganizations',
+                                        ('EOName',    'EOTypeName',    'EORegName',    'EOTerName'), 4),
+                                        (row[engPTName], 'null', row[engPTRegName], row[engPTTerName]))
+
+                    cur.execute(insert('tbl_test',
+                                        ('testName',    'testMark100',               'testMark12',               'testStatus',    'EOName'), 5),
+                                        (row[testName], validMark(row[testMark100]), validMark(row[testMark12]), row[testStatus], row[EONameTest]))
+                    
+                    cur.execute(insert('tbl_students',
+                                        ('outID',    'birth',    'sexTypeName',    'EOName'), 4),
+                                        (row[outID], row[birth], row[sexTypeName], row[EOName]))
+                    
+                    cur.execute('SELECT MAX(testID) FROM tbl_test')
+                    testID = cur.fetchone()[0]
+
+                    cur.execute(insert('tbl_students_tests',
+                                        ('studentID', 'testID', 'year'), 3),
+                                        (row[outID],  testID,    year))
+                
                     if idx % 10000 == 0:
                         conn.commit()
                 
@@ -148,14 +155,18 @@ while tries:
 
                 # tbl_regions
                 regName = headers.index('REGNAME')
-                areaName = headers.index('AREANAME')
+                terName = headers.index('TERNAME')
                 terTypeName = headers.index('TerTypeName')
 
                 # tbl_educationOrganizations
                 EOName = headers.index('EONAME')
                 EOTypeName = headers.index('EOTYPENAME')
                 EORegName = headers.index('EORegName')
-                EOAreaName = headers.index('EOAreaName')
+                EOTerName = headers.index('EOTerName')
+
+                engPTName = headers.index('engPTName')
+                engPTRegName = headers.index('engPTRegName')
+                engPTTerName = headers.index('engPTTerName')
 
                 # tbl_students
                 outID = headers.index('OUTID')
@@ -166,35 +177,36 @@ while tries:
                 year = 2020
 
 
-                while count != 0:
-                    row = next(reader)
-                    if row[testName] == 'Англійська мова':
-                        count -= 1
+                for _ in range(count):
+                    next(reader)
                 
                 for idx, row in enumerate(reader):
-                    if row[testName] == 'Англійська мова':
-                        cur.execute(insert('tbl_regions',
-                                          ('regName',    'areaName',    'terTypeName'), 3),
-                                          (row[regName], row[areaName], row[terTypeName]))
-                        
-                        cur.execute(insert('tbl_educationOrganizations',
-                                          ('EOName',    'EOTypeName',    'EORegName',    'EOAreaName'), 4),
-                                          (row[EOName], row[EOTypeName], row[EORegName], row[EOAreaName]))
-                        
-                        cur.execute(insert('tbl_test',
-                                          ('testName',    'testMark100',          'testMark12',         'testStatus', 'EOName'), 5),
-                                          (row[testName], validMark(row[testMark100]), validMark(row[testMark12]), row[testStatus], row[EONameTest]))
-                        
-                        cur.execute(insert('tbl_students',
-                                          ('outID',    'birth',    'sexTypeName',    'EOName'), 4),
-                                          (row[outID], row[birth], row[sexTypeName], row[EOName]))
-                        
-                        cur.execute('SELECT MAX(testID) FROM tbl_test')
-                        testID = cur.fetchone()[0]
+                    cur.execute(insert('tbl_regions',
+                                        ('regName',    'terName',    'terTypeName'), 3),
+                                        (row[regName], row[terName], row[terTypeName]))
+                    
+                    cur.execute(insert('tbl_educationOrganizations',
+                                        ('EOName',    'EOTypeName',    'EORegName',    'EOTerName'), 4),
+                                        (row[EOName], row[EOTypeName], row[EORegName], row[EOTerName]))
+                    
+                    cur.execute(insert('tbl_educationOrganizations',
+                                        ('EOName',    'EOTypeName',    'EORegName',    'EOTerName'), 4),
+                                        (row[engPTName], 'null', row[engPTRegName], row[engPTTerName]))
+                    
+                    cur.execute(insert('tbl_test',
+                                        ('testName',    'testMark100',               'testMark12',              'testStatus',    'EOName'), 5),
+                                        (row[testName], validMark(row[testMark100]), validMark(row[testMark12]), row[testStatus], row[EONameTest]))
+                    
+                    cur.execute(insert('tbl_students',
+                                        ('outID',    'birth',    'sexTypeName',    'EOName'), 4),
+                                        (row[outID], row[birth], row[sexTypeName], row[EOName]))
+                    
+                    cur.execute('SELECT MAX(testID) FROM tbl_test')
+                    testID = cur.fetchone()[0]
 
-                        cur.execute(insert('tbl_students_tests',
-                                          ('studentID', 'testID', 'year'), 3),
-                                          (row[outID],  testID,    year))
+                    cur.execute(insert('tbl_students_tests',
+                                        ('studentID', 'testID', 'year'), 3),
+                                        (row[outID],  testID,    year))
             
                     if idx % 10000 == 0:
                         conn.commit()
@@ -216,16 +228,16 @@ while tries:
         print(f'Execution time: {time.time() - start}')
 
 
-        cur.execute(query)
+        # cur.execute(query)
 
-        with open('ZNOdata.csv', 'w', newline='', encoding='utf-8') as csvfile:
-            writer = csv.writer(csvfile, delimiter=';')
-            writer.writerow([col[0] for col in cur.description])
+        # with open('ZNOdata.csv', 'w', newline='', encoding='utf-8') as csvfile:
+        #     writer = csv.writer(csvfile, delimiter=';')
+        #     writer.writerow([col[0] for col in cur.description])
 
-            for row in cur:
-                writer.writerow([str(el) for el in row])
+        #     for row in cur:
+        #         writer.writerow([str(el) for el in row])
         
-        print('Created file ZNOdata.csv with statistics')
+        # print('Created file ZNOdata.csv with statistics')
         
         tries = 0
     

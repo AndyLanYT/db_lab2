@@ -8,8 +8,8 @@ services:
       - flyway
     links:
       - "db:db" 
-    # volumes:
-      # - C:\Users\Admin\Desktop\to git\lab1\app:/app
+    volumes:
+      - C:\Users\Admin\Desktop\to git\lab1\app:/app
   
   flyway:
     image: flyway/flyway
